@@ -3,26 +3,29 @@
         "ID": "TTC",
         "Name": "Toronto Transit Commission",
         "City": "Toronto",
-        "Fare": "3.25"
+        "Fare": "3.25", 
+        "TransferFare": "0.99"
     }, 
     {
         "ID": "MI",
         "Name": "MiWay",
         "City": "Mississauga",
-        "Fare": "3.50"
+        "Fare": "3.50",
+        "TransferFare": "0.99"
     },
     {
         "ID": "BT",
         "Name": "Brampton Transit",
         "City": "Brampton",
-        "Fare": "3.75"
+        "Fare": "3.75",
+        "TransferFare": "0.50"
 
     },
     {
         "ID": "YRT",
         "Name": "York Region Transit",
         "City": "Richmond Hill",
-        "Fare": "4.25" 
+        "Fare": "1.25" 
     }
     
 ]
