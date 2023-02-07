@@ -1,7 +1,7 @@
 {
-    "name": "asset-transfer-basic",
+    "name": "transit-fare",
     "version": "1.0.0",
-    "description": "Asset-Transfer-Basic contract implemented in JavaScript",
+    "description": "Transit fare contract implemented in JavaScript for the fare transfer between multiple transit systems",
     "main": "index.js",
     "engines": {
         "node": ">=12",
