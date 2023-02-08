@@ -13,7 +13,7 @@ const expect = chai.expect;
 const { Context } = require('fabric-contract-api');
 const { ChaincodeStub } = require('fabric-shim');
 
-const AssetTransfer = require('../lib/assetTransfer.js');
+const AssetTransfer = require('../lib/fareTransfer.js');
 
 let assert = sinon.assert;
 chai.use(sinonChai);
