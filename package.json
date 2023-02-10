@@ -20,6 +20,8 @@
         "fabric-contract-api": "^2.0.0",
         "fabric-shim": "^2.0.0",
         "json-stringify-deterministic": "^1.0.1",
+        "moment": "^2.29.4",
+        "randomstring": "^1.2.3",
         "sort-keys-recursive": "^2.1.2"
     },
     "devDependencies": {
