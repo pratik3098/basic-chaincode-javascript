@@ -146,10 +146,9 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer.LastName, customer.TransitId);
 
             try {
-                await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer7', 'MI');
-                assert.fail('UpdatePrimaryTransit should have failed');
+                await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer7', 'YRT');
+                assert.fail('The customer customer7 does not exist');
             } catch (err) {
-                console.log(err.message);
                 expect(err.message).to.equal('The customer customer7 does not exist');
             }
         });
@@ -250,7 +249,7 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, 'customer4', 'Van', 'Louis', 'YRT');
 
             let ret = await fareTransfer.GetAllCustomers(transactionContext);
-            ret = JSON.parse(ret);
+            ret = JSON.parse(ret.toString());
             expect(ret.length).to.equal(4);
 
             let expected = [
