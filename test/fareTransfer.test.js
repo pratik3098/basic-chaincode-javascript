@@ -187,28 +187,29 @@ describe('Fare Transfer Basic Tests', () => {
         });
     });
 
-    // describe('Test TransferAsset', () => {
-    //     it('should return error on TransferAsset', async () => {
-    //         let fareTransfer = new FareTransfer();
-    //         await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer. LastName, customer.TransitId);
+    describe('Test ChargeFare', () => {
+        it('should return error on ChargeFare', async () => {
+            let fareTransfer = new FareTransfer();
+            try {
+                await fareTransfer.ChargeFare (transactionContext, customer.ID, 'Me');
+                assert.fail('Transit Id Me does not exist');
+            } catch (err) {
+                expect(err.message).to.equal('Transit Id Me does not exist');
+            }
+        });
 
-    //         try {
-    //             await fareTransfer.TransferAsset(transactionContext, 'customer2', 'Me');
-    //             assert.fail('DeleteCustomer should have failed');
-    //         } catch (err) {
-    //             expect(err.message).to.equal('The customer customer2 does not exist');
-    //         }
-    //     });
+        it('should return success on ChargeFare', async () => {
+            let fareTransfer = new FareTransfer();
+            await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer. LastName, customer.TransitId);
 
-    //     it('should return success on TransferAsset', async () => {
-    //         let fareTransfer = new FareTransfer();
-    //         await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer. LastName, customer.TransitId);
+            const ret = await fareTransfer.ChargeFare(transactionContext, customer.ID, 'MI');
 
-    //         await fareTransfer.TransferAsset(transactionContext, customer.ID, 'Me');
-    //         let ret = JSON.parse((await chaincodeStub.getState(customer.ID)).toString());
-    //         expect(ret).to.eql(Object.assign({}, customer, {Owner: 'Me'}));
-    //     });
-    // });
+            expect(JSON.parse(ret.toString()).Amount).to.eql('3.50');
+            const ret1 = await fareTransfer.ChargeFare(transactionContext, customer.ID, 'YRT');
+            expect(JSON.parse(ret1.toString()).Amount).to.eql('1.25');
+
+        });
+    });
 
     describe('Test GetAllCustomers', () => {
         it('should return success on GetAllCustomers', async () => {
@@ -249,7 +250,7 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, 'customer4', 'Van', 'Louis', 'YRT');
 
             let ret = await fareTransfer.GetAllCustomers(transactionContext);
-            ret = JSON.parse(ret.toString());
+            ret = JSON.parse(ret);
             expect(ret.length).to.equal(4);
 
             let expected = [
