@@ -68,6 +68,7 @@ describe('Fare Transfer Basic Tests', () => {
             FirstName: 'Brad',
             LastName: 'Pitt',
             TransitId: 'TTC',
+            LastTxnId: ''
         };
     });
 
@@ -87,7 +88,8 @@ describe('Fare Transfer Basic Tests', () => {
             let fareTransfer = new FareTransfer();
             await fareTransfer.InitLedger(transactionContext);
             let ret = JSON.parse((await chaincodeStub.getState('customer1')).toString());
-            expect(ret).to.eql(Object.assign({docType: 'customer'}, customer));
+
+            expect(ret).to.eql(Object.assign(customer,{docType: 'customer', LastTxnId: 'fare1'}));
         });
     });
 
@@ -110,7 +112,9 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer.LastName, customer.TransitId);
 
             let ret = JSON.parse((await chaincodeStub.getState(customer.ID)).toString());
-            expect(ret).to.eql(customer);
+
+            expect(ret).to.eql(Object.assign({docType: 'customer'}, customer));
+
         });
     });
 
@@ -132,22 +136,23 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer.LastName, customer.TransitId);
 
             let ret = JSON.parse(await chaincodeStub.getState(customer.ID));
-            expect(ret).to.eql(customer);
+            expect(ret).to.eql(Object.assign({docType: 'customer'}, customer));
         });
     });
 
     describe('Test UpdatePrimaryTransit', () => {
-        // it('should return error on UpdatePrimaryTransit', async () => {
-        //     let fareTransfer = new FareTransfer();
-        //     await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer.LastName, customer.TransitId);
+        it('should return error on UpdatePrimaryTransit', async () => {
+            let fareTransfer = new FareTransfer();
+            await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer.LastName, customer.TransitId);
 
-        //     try {
-        //         await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer2', 'TTC');
-        //         assert.fail('UpdatePrimaryTransit should have failed');
-        //     } catch (err) {
-        //         expect(err.message).to.equal('The customer customer2 does not exist');
-        //     }
-        // });
+            try {
+                const res = await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer2', 'MI');
+                assert.pass(res.toString());
+                assert.fail('UpdatePrimaryTransit should have failed');
+            } catch (err) {
+                expect(err.message).to.equal('The customer customer2 does not exist');
+            }
+        });
 
         it('should return success on UpdatePrimaryTransit', async () => {
             let fareTransfer = new FareTransfer();
@@ -155,13 +160,8 @@ describe('Fare Transfer Basic Tests', () => {
 
             await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer1', 'MI');
             let ret = JSON.parse(await chaincodeStub.getState(customer.ID));
-            let expected = {
-                ID: 'customer1',
-                FirstName: 'Brad',
-                LastName: 'Pitt',
-                TransitId: 'MI'
-            };
-            expect(ret).to.eql(expected);
+
+            expect(ret).to.eql(Object.assign({docType: 'customer', LastTxnId: 'fare1',TransitId: 'MI'}, customer));
         });
     });
 
