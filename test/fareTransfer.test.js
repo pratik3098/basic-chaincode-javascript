@@ -146,11 +146,11 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, customer.ID, customer.FirstName, customer.LastName, customer.TransitId);
 
             try {
-                const res = await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer2', 'MI');
-                assert.pass(res.toString());
+                await fareTransfer.UpdatePrimaryTransit(transactionContext, 'customer7', 'MI');
                 assert.fail('UpdatePrimaryTransit should have failed');
             } catch (err) {
-                expect(err.message).to.equal('The customer customer2 does not exist');
+                console.log(err.message);
+                expect(err.message).to.equal('The customer customer7 does not exist');
             }
         });
 
@@ -221,14 +221,14 @@ describe('Fare Transfer Basic Tests', () => {
             await fareTransfer.EnrollCustomer (transactionContext, 'customer4', 'Van', 'Louis', 'YRT');
 
             let ret = await fareTransfer.GetAllCustomers(transactionContext);
-            ret = JSON.parse(ret);
+            ret = JSON.parse(ret.toString());
             expect(ret.length).to.equal(4);
 
             let expected = [
-                {Record: {ID: 'customer1', FirstName: 'Robert', LastName: 'Brown',  TransferFare: 'TTC'}},
-                {Record: {ID: 'customer2', FirstName: 'Paul', LastName: 'Reeves',  TransferFare: 'MI'}},
-                {Record: {ID: 'customer3', FirstName: 'Mackenzie', LastName: 'Davis',  TransferFare: 'BT'}},
-                {Record: {ID: 'customer4', FirstName: 'Van', LastName: 'Louis',  TransferFare: 'YRT'}}
+                {ID: 'customer1', docType: 'customer', FirstName: 'Robert', LastName: 'Brown',  TransitId: 'TTC', LastTxnId: ''},
+                {ID: 'customer2', docType: 'customer', FirstName: 'Paul', LastName: 'Reeves',  TransitId: 'MI', LastTxnId: ''},
+                {ID: 'customer3', docType: 'customer', FirstName: 'Mackenzie', LastName: 'Davis',  TransitId: 'BT', LastTxnId: ''},
+                {ID: 'customer4', docType: 'customer', FirstName: 'Van', LastName: 'Louis',  TransitId: 'YRT', LastTxnId: ''}
             ];
 
             expect(ret).to.eql(expected);
@@ -254,10 +254,10 @@ describe('Fare Transfer Basic Tests', () => {
             expect(ret.length).to.equal(4);
 
             let expected = [
-                {Record: 'non-json-value'},
-                {Record: {ID: 'customer2', FirstName: 'Paul', LastName: 'Reeves', PrimaryTransit: 'MI'}},
-                {Record: {ID: 'customer3', FirstName: 'Mackenzie', LastName: 'Davis', PrimaryTransit: 'BT'}},
-                {Record: {ID: 'customer4', FirstName: 'Van', LastName: 'Louis', PrimaryTransit: 'YRT'}}
+                'non-json-value',
+                {ID: 'customer2', docType: 'customer', FirstName: 'Paul', LastName: 'Reeves', TransitId: 'MI', LastTxnId: ''},
+                {ID: 'customer3', docType: 'customer', FirstName: 'Mackenzie', LastName: 'Davis', TransitId: 'BT', LastTxnId: ''},
+                {ID: 'customer4', docType: 'customer', FirstName: 'Van', LastName: 'Louis', TransitId: 'YRT', LastTxnId: ''}
             ];
 
             expect(ret).to.eql(expected);
