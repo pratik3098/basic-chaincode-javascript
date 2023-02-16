@@ -8,5 +8,5 @@
 
 const fareTransfer = require('./lib/fareTransfer');
 
-module.exports.fareTransfer = fareTransfer;
+module.exports.FareTransfer = fareTransfer;
 module.exports.contracts = [fareTransfer];
